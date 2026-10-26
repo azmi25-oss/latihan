@@ -3,6 +3,11 @@
 
     <x-slot:title>{{ $title }}</x-slot>
 
+    @if (session('succes'))
+        <div class="alert alert-success" role="alert">
+            {{ session('succes') }}
+        </div>
+    @endif
 
     <a class="btn btn-primary mb-3" href="{{ route('student.create') }}" role="button">Create Student</a>
     <table class="table table-bordered border-dark table-hover">
@@ -22,7 +27,15 @@
                     <td>{{ $student->name }}</td>
                     <td>{{ $student->nim }}</td>
                     <td>
+                        <a class="btn btn-warning" href="{{ route('student.edit', $student->id) }}"
+                            role="button">Edit</a>
 
+                        <form method="POST" action="{{ route('student.destroy', $student) }}" class="d-inline">
+                            @csrf
+                            @method('delete')
+                            <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('are you sure?')">Delete</button>
+                        </form>
                     </td>
                 </tr>
             @endforeach

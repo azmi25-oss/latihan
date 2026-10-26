@@ -16,7 +16,7 @@ class StudentController extends Controller
     
 
         return view('student.index',
-         [
+            [
             'title' => 'Student',
             'students' => Student::latest()->get(),
             ]);
@@ -48,11 +48,10 @@ class StudentController extends Controller
                 'nim.digits' =>'Nim Wajib 12 Digit',
             ]
 
-         );
- 
+        );
+
     Student::create($validated);
- 
-    return redirect('/student');
+    return to_route('student.index')->withSucces('Data Berhasil Di Input :)');
     }
 
     /**
@@ -66,24 +65,44 @@ class StudentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        //
-    }
+    public function edit(Student $student)
+{
+    return view('student.edit', [
+        'title' => 'Edit Student',
+        'student' => $student,
+    ]);
+}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Student $student)
     {
-        //
+            $validated = $request->validate(
+            [
+                'name' => 'required',
+                'nim' => 'required|numeric|digits:12',
+            ],
+
+            [
+                'name.required' =>'Nama Wajib Di Input',
+                'nim.required' =>'Nim Wajib Di Input',
+                'nim.numeric' =>'Nim Wajib Berupa Anggka',
+                'nim.digits' =>'Nim Wajib 12 Digit',
+            ]
+
+        );
+
+    $student->update($validated);
+    return to_route('student.index')->withSucces('Data Berhasil Diubah :)');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Student $student)
     {
-        //
+        $student->delete();
+    return to_route('student.index')->withSucces('Data Berhasil Dihapus :)');
     }
 }
